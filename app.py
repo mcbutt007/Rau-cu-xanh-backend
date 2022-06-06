@@ -16,7 +16,7 @@ def check_login():
     password = request.args.get('password')
 
     conn = get_db_connection()
-    UsrID = conn.execute('SELECT ID FROM USER WHERE USERNAME = ? AND PASSWORD = ?',
+    UsrID = conn.execute('SELECT USER_ID FROM USER WHERE USERNAME = ? AND PASSWORD = ?',
                         (username,password)).fetchone()
     conn.close()
 
@@ -32,7 +32,7 @@ def recieve_email():
     # Insert recieved email in to database
 
     conn = get_db_connection()
-    conn.execute('INSERT INTO FORGET_PASSWORD_EMAIL (EMAIL, TIME_SENT) VALUES ( ?, CURRENT_TIMESTAMP )', (email,))
+    conn.execute('INSERT INTO FORGET_PASSWORD_EMAIL (EMAIL, TIME_STAMP) VALUES ( ?, CURRENT_TIMESTAMP )', (email,))
     conn.commit()
     conn.close()
 
@@ -47,14 +47,14 @@ def recieve_registration_info():
 
     # Check if email already in user database
     conn = get_db_connection()
-    emailExists = conn.execute('SELECT ID FROM USER WHERE EMAIL = ?', (email,)).fetchone()
+    emailExists = conn.execute('SELECT USER_ID FROM USER WHERE EMAIL = ?', (email,)).fetchone()
     conn.close()
 
     # Neu khong co email trong db trung voi email dang ky
     if emailExists is None :
         # Insert recieved user info in to database
         conn = get_db_connection()
-        conn.execute('INSERT INTO USER (USERNAME,EMAIL,PASSWORD) VALUES (?, ?, ?)', (username,email,password))
+        conn.execute('INSERT INTO USER (USERNAME,EMAIL,PASSWORD,TIME_REGISTERED) VALUES (?, ?, ?,CURRENT_TIMESTAMP)', (username,email,password))
         conn.commit()
         conn.close()
         return "Đã tạo tài khoản thành công"
