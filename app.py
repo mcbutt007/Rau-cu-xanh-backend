@@ -1,5 +1,5 @@
 from flask import Flask, json, jsonify, request, render_template
-import sqlite3
+import sqlite3, base64
 
 # create the Flask app
 app = Flask(__name__)
@@ -60,6 +60,17 @@ def recieve_registration_info():
         return "Đã tạo tài khoản thành công"
     else :
         return "Email tồn tại. Có phải bạn quên mật khẩu?"
+
+@app.route('/img', methods=['GET'])
+def test():
+    conn = get_db_connection()
+    img = conn.execute('SELECT PROFILE_PIC FROM USER WHERE USER_ID=1')
+    img_binary = read_image(img)
+    data = {
+        "image" : base64.b64decode(img.fetchone()).decode('utf-8'),
+    }
+    conn.close()
+    return jsonify(data)
 
 if __name__ == '__main__':
     # run app in debug mode on port 5000
