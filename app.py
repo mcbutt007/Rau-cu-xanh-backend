@@ -1,5 +1,5 @@
-from flask import Flask, json, jsonify, request, render_template
-import sqlite3, base64
+from flask import *
+import sqlite3, base64, functools, shutil
 
 # create the Flask app
 app = Flask(__name__)
@@ -8,6 +8,11 @@ def get_db_connection():
     conn = sqlite3.connect('database/main.db')
     conn.row_factory = sqlite3.Row
     return conn
+
+@app.route('/<path:filename>')
+def download_file(filename):
+    return send_from_directory(r'database/images/',
+                               filename, as_attachment=True)
 
 @app.route('/login', methods=['POST'])
 def check_login():
@@ -57,6 +62,8 @@ def recieve_registration_info():
         conn.execute('INSERT INTO USER (USERNAME,EMAIL,PASSWORD,TIME_REGISTERED) VALUES (?, ?, ?,CURRENT_TIMESTAMP)', (username,email,password))
         conn.commit()
         conn.close()
+        # copy hình ảnh 0.png thành <USER_ID>.png trong /database/images/user
+        # shutil.copy2('database/images/user/0.png', 'database/images/user/1.png')
         return "Đã tạo tài khoản thành công"
     else :
         return "Email tồn tại. Có phải bạn quên mật khẩu?"
