@@ -23,11 +23,14 @@ def landing_page():
 
 # trả về danh sách rau củ
 @app.route('/home', methods=['POST','GET'])
-def Home():
+def Home(one=False):
     conn = get_db_connection()
-    feed = conn.execute('SELECT * FROM RAUCU').fetchall()
+    feed = conn.execute('SELECT * FROM RAUCU')
+    # convert query to json
+    response = [dict((feed.description[i][0], value) \
+        for i, value in enumerate(row)) for row in feed.fetchall()]
     conn.close()
-    return jsonify([tuple(row) for row in feed])
+    return jsonify((r[0] if response else None) if one else response)
 
 # trả về thông tin rau củ theo id
 @app.route('/raucuinfo/<id>', methods=['GET','POST'])
