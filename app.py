@@ -10,15 +10,26 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+# đường dẫn up hình, vd user/1.png
 @app.route('/<path:filename>')
 def download_file(filename):
     return send_from_directory(r'database/images/',
                                filename, as_attachment=True)
 
+# kiểm tra xem server có đang chạy hay không
 @app.route('/', methods=['GET'])
 def landing_page():
     return "Server is working!"
 
+# trả về danh sách rau củ
+@app.route('/home', methods=['POST','GET'])
+def Home():
+    conn = get_db_connection()
+    feed = conn.execute('SELECT * FROM RAUCU').fetchall()
+    conn.close()
+    return jsonify([tuple(row) for row in feed])
+
+# trả về thông tin rau củ theo id
 @app.route('/raucuinfo/<id>', methods=['GET','POST'])
 def RaucuInfo(id):
     conn = get_db_connection()
@@ -32,7 +43,7 @@ def RaucuInfo(id):
     # Output the query result as JSON
     return jsonify([tuple(row) for row in raucuinfo])
 
-
+# trả về thông tin rau củ theo id
 @app.route('/userinfo/<id>', methods=['GET','POST'])
 def UserInfo(id):
     conn = get_db_connection()
@@ -46,6 +57,7 @@ def UserInfo(id):
     # Output the query result as JSON
     return jsonify([tuple(row) for row in userinfo])
 
+# login trả về userid nếu thành công
 @app.route('/login', methods=['POST'])
 def check_login():
     #get username from POST request ex: /checklogin?username=Phuc&password=123456
@@ -62,6 +74,7 @@ def check_login():
         return "0"
     return str(UsrID[0])
 
+# bỏ thông tin vào bảng RESET_PASSWORD_EMAIL, không làm gì khác.
 @app.route('/resetpassword', methods=['POST'])
 def recieve_email():
     # get email from POST request ex: /resetpassword?email=example%40gmail.com
@@ -69,7 +82,7 @@ def recieve_email():
     # Insert recieved email in to database
 
     conn = get_db_connection()
-    conn.execute('INSERT INTO FORGET_PASSWORD_EMAIL (EMAIL, TIME_STAMP) VALUES ( ?, CURRENT_TIMESTAMP )', (email,))
+    conn.execute('INSERT INTO RESET_PASSWORD_EMAIL (EMAIL, TIME_STAMP) VALUES ( ?, CURRENT_TIMESTAMP )', (email,))
     conn.commit()
     conn.close()
 
@@ -102,4 +115,5 @@ def recieve_registration_info():
 
 if __name__ == '__main__':
     # run app in debug mode on port 5000
+    app.config['JSON_AS_ASCII'] = False # fix lỗi ko trả về dấu đươc
     app.run(debug=True, host='0.0.0.0', port=5000)
