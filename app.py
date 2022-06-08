@@ -19,6 +19,20 @@ def download_file(filename):
 def landing_page():
     return "Server is working!"
 
+@app.route('/raucuinfo/<id>', methods=['GET','POST'])
+def RaucuInfo(id):
+    conn = get_db_connection()
+    raucuinfo = conn.execute('SELECT * FROM RAUCU WHERE RAUCU_ID = ?',
+                            (id)).fetchall()
+    conn.close()
+
+    if raucuinfo is None:
+        return "unvalid raucu"
+
+    # Output the query result as JSON
+    return jsonify([tuple(row) for row in raucuinfo])
+
+
 @app.route('/userinfo/<id>', methods=['GET','POST'])
 def UserInfo(id):
     conn = get_db_connection()
