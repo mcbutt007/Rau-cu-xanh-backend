@@ -1,5 +1,6 @@
 from flask import *
 import sqlite3, base64, functools, shutil
+import itertools
 
 # create the Flask app
 app = Flask(__name__)
@@ -18,6 +19,19 @@ def download_file(filename):
 def landing_page():
     return "Server is working!"
 
+@app.route('/userinfo/<id>', methods=['GET','POST'])
+def UserInfo(id):
+    conn = get_db_connection()
+    userinfo = conn.execute('SELECT * FROM USER WHERE USER_ID = ?',
+                            (id)).fetchall()
+    conn.close()
+
+    if userinfo is None:
+        return "unvalid user"
+
+    # Output the query result as JSON
+    return jsonify([tuple(row) for row in userinfo])
+
 @app.route('/login', methods=['POST'])
 def check_login():
     #get username from POST request ex: /checklogin?username=Phuc&password=123456
@@ -26,7 +40,7 @@ def check_login():
 
     conn = get_db_connection()
     UsrID = conn.execute('SELECT USER_ID FROM USER WHERE USERNAME = ? AND PASSWORD = ?',
-                        (username,password)).fetchone()
+                         (username,password)).fetchone()
     conn.close()
 
     # return user id to the app
