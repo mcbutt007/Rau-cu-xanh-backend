@@ -1,6 +1,5 @@
 from flask import *
 import sqlite3, base64, functools, shutil
-import itertools
 
 # create the Flask app
 app = Flask(__name__)
@@ -10,7 +9,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# đường dẫn up hình, vd user/1.png
+# đường dẫn up hình, vd shop/<id>.png, user/234.png
 @app.route('/<path:filename>')
 def download_file(filename):
     return send_from_directory(r'database/images/',
@@ -34,31 +33,27 @@ def Home(one=False):
 
 # trả về thông tin rau củ theo id
 @app.route('/raucuinfo/<id>', methods=['GET','POST'])
-def RaucuInfo(id):
+def RaucuInfo(id,one=False):
     conn = get_db_connection()
     raucuinfo = conn.execute('SELECT * FROM RAUCU WHERE RAUCU_ID = ?',
-                            (id)).fetchall()
+                            (id))
+    response = [dict((raucuinfo.description[i][0], value) \
+        for i, value in enumerate(row)) for row in raucuinfo.fetchall()]
     conn.close()
-
-    if raucuinfo is None:
-        return "unvalid raucu"
-
     # Output the query result as JSON
-    return jsonify([tuple(row) for row in raucuinfo])
+    return jsonify((r[0] if response else None) if one else response)
 
-# trả về thông tin rau củ theo id
+# trả về thông tin người dùng theo id
 @app.route('/userinfo/<id>', methods=['GET','POST'])
-def UserInfo(id):
+def UserInfo(id,one=False):
     conn = get_db_connection()
     userinfo = conn.execute('SELECT * FROM USER WHERE USER_ID = ?',
-                            (id)).fetchall()
+                            (id))
+    response = [dict((userinfo.description[i][0], value) \
+        for i, value in enumerate(row)) for row in userinfo.fetchall()]
     conn.close()
-
-    if userinfo is None:
-        return "unvalid user"
-
     # Output the query result as JSON
-    return jsonify([tuple(row) for row in userinfo])
+    return jsonify((r[0] if response else None) if one else response)
 
 # login trả về userid nếu thành công
 @app.route('/login', methods=['POST'])
