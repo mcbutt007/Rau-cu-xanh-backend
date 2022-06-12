@@ -1,8 +1,17 @@
 from flask import *
+from flask_sqlalchemy import SQLAlchemy
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 import sqlite3, base64, functools, shutil
 
 # create the Flask app
 app = Flask(__name__)
+
+app.config['JSON_AS_ASCII'] = False # fix lỗi ko trả về dấu đươc
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/main.db'
+app.config['SECRECT_KEY'] = 'mysecrect'
+
+admin = Admin(app)
 
 def get_db_connection():
     conn = sqlite3.connect('database/main.db')
@@ -113,5 +122,4 @@ def recieve_registration_info():
 
 if __name__ == '__main__':
     # run app in debug mode on port 5000
-    app.config['JSON_AS_ASCII'] = False # fix lỗi ko trả về dấu đươc
     app.run(debug=True, host='0.0.0.0', port=5000)
