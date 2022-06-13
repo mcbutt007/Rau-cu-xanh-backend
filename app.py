@@ -225,7 +225,7 @@ def MuaHang():
     raucuid = request.args.get('raucuid')
 
     conn = get_db_connection()
-    conn.execute('INSERT INTO RECIEPT (USER_ID,RAUCU_ID) VALUES (?,?)', (userid,raucuid))
+    conn.execute('INSERT INTO RECIEPT (USER_ID,CREATED_TIME,RAUCU_ID) VALUES (?,CURRENT_TIMESTAMP,?)', (userid,raucuid))
     conn.commit()
     conn.close()
     return "Done"
