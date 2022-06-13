@@ -2,7 +2,7 @@ from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-import sqlite3, base64, functools, shutil
+import sqlite3
 
 # create the Flask app
 app = Flask(__name__)
