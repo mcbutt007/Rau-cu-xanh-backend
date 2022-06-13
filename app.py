@@ -116,7 +116,7 @@ def Review(one=False):
         for i, value in enumerate(row)) for row in feed.fetchall()]
     conn.close()
     return jsonify((r[0] if response else None) if one else response)
-    
+
     # trả về danh sách Shop
 @app.route('/shop', methods=['POST','GET'])
 def Shop(one=False):
@@ -188,7 +188,7 @@ def recieve_email():
     # Insert recieved email in to database
 
     conn = get_db_connection()
-    conn.execute('INSERT INTO RESET_PASSWORD_EMAIL (EMAIL, TIME_STAMP) VALUES ( ?, CURRENT_TIMESTAMP )', (email,))
+    conn.execute('INSERT INTO FORGET_PASSWORD_EMAIL (EMAIL, TIME_STAMP) VALUES ( ?, CURRENT_TIMESTAMP )', (email,))
     conn.commit()
     conn.close()
 
