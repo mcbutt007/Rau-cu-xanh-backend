@@ -143,8 +143,8 @@ def Shop_raucu_list(one=False):
 @app.route('/raucuinfo/<id>', methods=['GET','POST'])
 def RaucuInfo(id,one=False):
     conn = get_db_connection()
-    raucuinfo = conn.execute('SELECT * FROM RAUCU WHERE RAUCU_ID = ?',
-                            (id,))
+    raucuinfo = conn.execute('SELECT * FROM RAUCU WHERE RAUCU_ID = (?)',
+                            [id])
     response = [dict((raucuinfo.description[i][0], value) \
         for i, value in enumerate(row)) for row in raucuinfo.fetchall()]
     conn.close()
@@ -156,7 +156,7 @@ def RaucuInfo(id,one=False):
 def UserInfo(id,one=False):
     conn = get_db_connection()
     userinfo = conn.execute('SELECT * FROM USER WHERE USER_ID = ?',
-                            (id))
+                            [id])
     response = [dict((userinfo.description[i][0], value) \
         for i, value in enumerate(row)) for row in userinfo.fetchall()]
     conn.close()
