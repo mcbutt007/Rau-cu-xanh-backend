@@ -9,25 +9,25 @@ class User(db.Model):
     ProfilePic = db.Column(db.String(128))
     PhoneNo = db.Column(db.Numeric)
     Birthday = db.Column(db.DateTime)
-    Gender = db.Column(db.String(128))
+    Gender = db.Column(db.String(16))
     TimeRegistered  = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 class Reset_Password_Email(db.Model):
     Email = db.Column(db.String(64), index=True, unique=True)
-    TimeStamp = db.Column(db.String(120), index=True, unique=True)
+    TimeStamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 class Notifications(db.Model):
     NotiID = db.Column(db.Integer, primary_key=True)
-    UserID = db.Column(db.String(64), index=True, unique=True)
-    RaucuID = db.Column(db.String(120), index=True, unique=True)
-    TypeID = db.Column(db.String(128))
-    Description = db.Column(db.String(128))
-    TimeStamp = db.Column(db.Numeric)
+    UserID = db.Column(db.Integer, db.ForeignKey('user.UserID'))
+    RaucuID = db.Column(db.Integer, db.ForeignKey('shop.ShopID'))
+    TypeID = db.Column(db.Integer, db.ForeignKey('noti_type.NotiTypeID'))
+    Description = db.Column(db.String(512))
+    TimeStamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 class Noti_Type(db.Model):
     NotiTypeID = db.Column(db.Integer, primary_key=True)
-    Name = db.Column(db.String(64), index=True, unique=True)
-    Description = db.Column(db.String(120), index=True, unique=True)
+    Name = db.Column(db.String(64), index=True)
+    Description = db.Column(db.String(512))
 
 class Reciept(db.Model):
     RecieptID = db.Column(db.Integer, primary_key=True)
