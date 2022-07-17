@@ -2,18 +2,18 @@ from datetime import datetime
 from app import db
 
 class User(db.Model):
-    UserID = db.column(db.integer, primary_key=true)
+    UserID = db.column(db.Integer, primary_key=true)
     UserName = db.Column(db.String(64), index=True, unique=True)
-    Email = db.Column(db.String(120), index=True, unique=True)
+    Email = db.Column(db.String(128), index=True, unique=True)
     PasswordHash = db.Column(db.String(128))
     ProfilePic = db.Column(db.String(128))
     PhoneNo = db.Column(db.Numeric)
     Birthday = db.Column(db.DateTime)
     Gender = db.Column(db.String(16))
-    TimeRegistered  = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    TimeRegistered = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 class Reset_Password_Email(db.Model):
-    Email = db.Column(db.String(64), index=True, unique=True)
+    Email = db.Column(db.String(128), index=True, unique=True)
     TimeStamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 class Notifications(db.Model):
@@ -38,7 +38,7 @@ class Reciept(db.Model):
     CreatedTime = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 class Reciept_List(db.Model):
-    RecieptID = db.Column(db.Integer, primary_key=True)
+    RecieptID = db.Column(db.Integer, db.ForeignKey('reciept.RecieptID'))
     RaucuID = db.Column(db.Integer, db.ForeignKey('raucu.RaucuID'))
     Quantity = db.Column(db.Integer)
 
@@ -65,7 +65,7 @@ class Review(db.Model):
 
 class ReviewType(db.Model):
     TypeID = db.Column(db.Integer, primary_key=True)
-    Name = db.Column(db.String(64), index=True, unique=True)
+    Name = db.Column(db.String(64), index=True)
     RaucuID = db.Column(db.Integer, db.ForeignKey('raucu.RaucuID'))
     ShopID = db.Column(db.Integer, db.ForeignKey('shop.ShopID'))
 
@@ -74,11 +74,11 @@ class Shop(db.Model):
     Name = db.Column(db.String(64), index=True, unique=True)
     Address = db.Column(db.String(256), index=True)
     PhoneNo = db.Column(db.Numeric)
-    ProfilePic = db.Column(db.String(120))
-    TimeCreated  = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    ProfilePic = db.Column(db.String(128))
     NoSelling = db.Column(db.Integer)
     NoSold = db.Column(db.Integer)
     ReviewID = db.Column(db.Integer, db.ForeignKey('review.ReviewID'))
+    TimeCreated  = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 class Selling_List(db.Model):
     ShopID = db.Column(db.Integer, db.ForeignKey('shop.ShopID'))
@@ -90,11 +90,11 @@ class Selling_List(db.Model):
 class Raucu(db.Model):
     RaucuID = db.Column(db.Integer, primary_key=True)
     Name = db.Column(db.String(64), index=True, unique=True)
-    Type = db.Column(db.String(120), index=True, unique=True)
+    Type = db.Column(db.String(128), index=True)
     ShopID = db.Column(db.Integer, db.ForeignKey('shop.ShopID'))
-    ProductPic = db.Column(db.String(120), index=True, unique=True)
-    Price = db.Column(db.String(120), index=True, unique=True)
-    Description = db.Column(db.String(120), index=True, unique=True)
-    ReviewID = db.Column(db.String(120), index=True, unique=True)
+    ProductPic = db.Column(db.String(128))
+    Price = db.Column(db.Numeric)
+    Description = db.Column(db.String(512))
+    ReviewID = db.Column(db.Integer, db.ForeignKey('review.ReviewID'))
+    Discount = db.Column(db.Float)
     TimeCreated = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    Discount = db.Column(db.String(120), index=True, unique=True)
