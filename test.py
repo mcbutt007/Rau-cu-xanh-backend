@@ -16,12 +16,14 @@ class UserModelCase(unittest.TestCase):
 
     def test_add_data(self):
         u1 = User(UserName='alice', Email='alice@unittest.com')
+        u1.set_password('susan1234')
         u2 = User(UserName='bob', Email='bob@unittest.com')
+        u2.set_password('susan1234')
         db.session.add(u1)
         db.session.add(u2)
         db.session.commit()
         self.assertEqual(u1.UserName, 'alice')
-        self.assertNotEqual(u2.UserName, 'bob')
+        self.assertNotEqual(u2.UserName, 'alice')
 
     def tearDown(self):
         db.session.remove()

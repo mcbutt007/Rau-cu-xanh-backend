@@ -6,7 +6,7 @@ class User(db.Model):
     UserID = db.Column(db.Integer, primary_key=True)
     UserName = db.Column(db.String(64), index=True, unique=True)
     Email = db.Column(db.String(128), index=True, unique=True)
-    PasswordHash = db.Column(db.String(128))
+    PasswordHash = db.Column(db.String(128), nullable=False)
     ProfilePic = db.Column(db.String(128))
     PhoneNo = db.Column(db.Numeric)
     Birthday = db.Column(db.DateTime)
