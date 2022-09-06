@@ -1,3 +1,8 @@
-Flask==2.1.2
-flask_admin==1.6.0
-flask_sqlalchemy==2.5.1
+flask_admin
+flask
+python-dotenv
+flask-wtf
+flask-sqlalchemy
+email-validator
+flask-migrate
+flask-login
