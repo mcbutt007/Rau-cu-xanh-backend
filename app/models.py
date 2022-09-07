@@ -27,7 +27,7 @@ class User(db.Model):
 class Reset_password_email(db.Model):
     email = db.Column(db.String(128), index=True, primary_key=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow, primary_key=True)
-    status = db.Column(db.String(120), index=True)
+    status = db.Column(db.String(120), index=True, default='NotChecked')
 
 class Notifications(db.Model):
     noti_id = db.Column(db.Integer, primary_key=True)
@@ -80,6 +80,8 @@ class Shop(db.Model):
     no_sold = db.Column(db.Integer)
     review_id = db.Column(db.Integer, db.ForeignKey('review.review_id'))
     timestamp  = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    reviews = db.relationship('Review', backref='shop', lazy=True)
+    selling_list = db.relationship('Selling_list', backref='shop', lazy=True)
 
 class Selling_list(db.Model):
     shop_id = db.Column(db.Integer, db.ForeignKey('shop.shop_id'), primary_key=True)
@@ -99,3 +101,4 @@ class Raucu(db.Model):
     review_id = db.Column(db.Integer, db.ForeignKey('review.review_id'))
     discount = db.Column(db.Float)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    reviews = db.relationship('Review', backref='raucu', lazy=True)
