@@ -1,2 +1,2 @@
 FLASK_APP=rau-cu-xanh.py
-FLASK_ENV=development
+FLASK_DEBUG=True
