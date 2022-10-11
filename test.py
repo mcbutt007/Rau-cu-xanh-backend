@@ -1,12 +1,19 @@
 from datetime import datetime, timedelta
 import unittest, os
-from app import app, db
+from app import create_app, db
 from app.models import *
+from config import Config
 
+class TestConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
 class UserModelCase(unittest.TestCase):
     def setUp(self):
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        self.app = create_app(TestConfig)
+        self.app_contex = self.app.app_context()
+        self.app_contex.push()
+        # self.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
         # basedir = os.path.abspath(os.path.dirname(__file__))
         # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'test.db')
         db.create_all()
@@ -94,7 +101,8 @@ class UserModelCase(unittest.TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+        self.app_contex.pop()
 
 if __name__ == '__main__':
-    app.config['TESTING'] = True
+    # app.config['TESTING'] = True
     unittest.main(verbosity=2)

@@ -1,3 +1,4 @@
+Babel
 flask_admin
 flask
 python-dotenv
@@ -6,3 +7,4 @@ flask-sqlalchemy
 email-validator
 flask-migrate
 flask-login
+flask-httpauth

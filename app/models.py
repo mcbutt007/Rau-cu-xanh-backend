@@ -2,6 +2,9 @@ from datetime import datetime
 from app import login, db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+import base64
+from datetime import datetime, timedelta
+import os
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,6 +16,8 @@ class User(UserMixin, db.Model):
     birthday = db.Column(db.DateTime)
     gender = db.Column(db.String(16))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    token = db.Column(db.String(32), index=True, unique=True)
+    token_expiration = db.Column(db.DateTime)
     notifications = db.relationship('Notifications', backref='user', lazy=True)
     carts = db.relationship('Cart', backref='user', lazy=True)
     bookmarks = db.relationship('Bookmark', backref='user', lazy=True)
@@ -26,9 +31,42 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
     def __repr__(self):
         return '<User {}>'.format(self.username)
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+    def to_dict(self, include_email=False):
+        data = {
+            'id': self.id,
+            'username': self.username,
+        }
+        if include_email:
+            data['email'] = self.email
+        return data
+    def from_dict(self, data, new_user=False):
+        for field in ['username', 'email']:
+            if field in data:
+                setattr(self, field, data[field])
+        if new_user and 'password' in data:
+            self.set_password(data['password'])
+    @login.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
+
+    def get_token(self, expires_in=3600):
+        now = datetime.utcnow()
+        if self.token and self.token_expiration > now + timedelta(seconds=60):
+            return self.token
+        self.token = base64.b64encode(os.urandom(24)).decode('utf-8')
+        self.token_expiration = now + timedelta(seconds=expires_in)
+        db.session.add(self)
+        return self.token
+
+    def revoke_token(self):
+        self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
+
+    @staticmethod
+    def check_token(token):
+        user = User.query.filter_by(token=token).first()
+        if user is None or user.token_expiration < datetime.utcnow():
+            return None
+        return user
 
 class Reset_password_email(db.Model):
     email = db.Column(db.String(128), index=True, primary_key=True)
