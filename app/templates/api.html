@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+  </head>
+  <body>
+    <h1>Ví dụ dưới dùng <a href="https://httpie.io/cli">httpie</a> để test</h2>
+    <h1>LOGIN</h1>
+    <ul>
+      <li>
+        /api/login (VD:
+        <code
+          >http PUT http://localhost:5000/api/login username=alice password=susan1234</code>)
+      </li>
+      </ul>
+      <div>Nếu đúng tài khoản mật khẩu, trả về toàn bộ thông tin người dùng như /api/user/1 . Dùng thông tin này để lấy user_id và bỏ vào phần thông tin của tôi.</div>
+    <h1>GET API list</h1>
+    <ul>
+      <li>
+        <a href="api/users">/api/users</a>
+      </li>
+      <li>
+        <a href="api/user/1">/api/user/1</a>
+      </li>
+      <li>
+        <a href="api/rauculist">/api/rauculist</a>
+	Lọc rau cu theo raucu_type hoac shop_id: VD 
+        <code
+          >http GET http://localhost:5000/api/rauculist raucu_type=rau</code>
+      </li>
+      <li>
+        <a href="api/raucu/1">/api/raucu/1</a>
+      </li>
+      <li>
+        <a href="api/notifications">/api/notifications</a>
+      </li>
+      <li>
+        <a href="api/notification/1">/api/notification/1</a>
+      </li>
+      <li>
+        <a href="api/receipts">/api/receipts</a>
+	Lọc hóa đơn theo user_id: VD
+        <code
+          >http GET http://localhost:5000/api/receipt user_id=1</code>
+      </li>
+      <li>
+        <a href="api/receiptlist">/api/receiptlist</a>
+      </li>
+      <li>
+        <a href="api/receipt/1">/api/receipt/1</a>
+      </li>
+      <li>
+        <a href="api/carts">/api/carts</a>
+      </li>
+      <li>
+        <a href="api/bookmarks">/api/bookmarks</a>
+      </li>
+      <li>
+        <a href="api/reviews">/api/reviews</a>
+	Lọc review theo raucu_id hoac shop_id: VD 
+        <code
+          >http GET http://localhost:5000/api/rauculist raucu_id=11</code>
+      </li>
+      <li>
+        <a href="api/review/1">/api/review/1</a>
+      </li>
+      <li>
+        <a href="api/shop/1">/api/shop/1</a>
+      </li>
+      <li>
+        <a href="api/shops">/api/shops</a>
+      </li>
+    </ul>
+    <h1>POST API list (for creating new entry in database)</h1>
+    <ul>
+      <li>
+        /api/users (VD
+        <code
+          >http POST http://localhost:5000/api/users username=alice password=dog
+          email=alice@example.com</code
+        >)
+      </li>
+      <li>
+        /api/bookmarks (VD
+        <code
+          >http POST http://localhost:5000/api/bookmarks user_id=1
+          raucu_id=2</code
+        >)
+      </li>
+      <li>
+        /api/resetpassword (VD
+        <code
+          >http POST http://localhost:5000/api/resetpassword email=alice@example.com</code
+        >)
+      </li>
+      <li>
+        /api/reviews (VD
+        <code
+          >http POST http://localhost:5000/api/reviews user_id=1 raucu_id=1 stars=1 comments="This is so badddddd"</code
+        >)
+      </li>
+      <li>
+        /api/receipts (VD
+        <code
+          >http POST localhost:5000/api/receipts user_id=1 shipping_cost=3333
+          shipping_addr=12345 total_price=1234</code
+        >)
+      </li>
+      <li>
+        /api/receiptlist (VD
+        <code
+          >http POST localhost:5000/api/receiptlist receipt_id=1 raucu_id=3333 quantity=10</code
+        >)
+      </li>
+      <li>
+        /api/carts (VD
+        <code
+          >http POST http://localhost:5000/api/carts user_id=1 raucu_id=2
+          quantity=10</code
+        >)
+      </li>
+    </ul>
+    <h1>PUT API list (for updating values in database)</h1>
+    <ul>
+      <li>
+        /api/users/1 (VD:
+        <code>http PUT http://localhost:5000/api/users/1 phone_no=123456</code>)
+      </li>
+      <li>
+        /api/changepassword (VD:
+        <code>http PUT http://localhost:5000/api/changepassword id=3 password=Sudan2245</code>)
+      </li>
+      <li>
+        /api/carts (VD:
+        <code
+          >http PUT http://localhost:5000/api/carts user_id=1 raucu_id=2
+          quantity=2</code
+        >)
+      </li>
+      <li>
+        /api/receipts (VD:
+        <code
+          >http PUT http://localhost:5000/api/receipts id=1 order_status=dahuy</code
+        >)
+      </li>
+      <li>
+        /api/reviews (VD
+        <code
+          >http PUT http://localhost:5000/api/reviews user_id=1 raucu_id=1 stars=1 comments="This is so badddddd"</code
+        >)
+      </li>
+    </ul>
+    <h1>DELETE API list (for deleting row in database)</h1>
+    <ul>
+      <li>
+        /api/bookmarks (VD:
+        <code
+          >http DELETE http://localhost:5000/api/bookmarks user_id=1
+          raucu_id=1</code
+        >)
+      </li>
+      <li>
+        /api/carts (VD:
+        <code
+          >http DELETE http://localhost:5000/api/bookmarks user_id=1
+          raucu_id=1</code
+        >)
+      </li>
+    </ul>
+  </body>
+</html>
